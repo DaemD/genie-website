@@ -35,7 +35,8 @@ import { StaggerChildren, StaggerChild } from "@/components/animations/stagger-c
 import { Counter } from "@/components/animations/counter"
 import { DashboardPreview } from "@/components/dashboard-preview"
 import { CreativeImage } from "@/components/creative-image"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState } from "react"
 
 const services = [
   {
@@ -205,7 +206,46 @@ const resources = [
   },
 ]
 
+// Rotating text component for hero - Client-side only to avoid hydration issues
+function RotatingText({ words }: { words: string[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % words.length)
+    }, 3000) // Change every 3 seconds
+
+    return () => clearInterval(interval)
+  }, [words.length])
+
+  // Show first word on server to avoid hydration mismatch
+  if (!mounted) {
+    return <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">{words[0]}</span>
+  }
+
+  return (
+    <span className="relative inline-block min-w-[200px] sm:min-w-[280px] lg:min-w-[320px] text-left">
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={currentIndex}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5 }}
+          className="inline-block bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent"
+        >
+          {words[currentIndex]}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  )
+}
+
 export default function HomePage() {
+  const talentTypes = ["marketer", "designer", "developer", "consultant", "specialist"]
+  
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Subtle background elements - Professional and non-distracting */}
@@ -242,17 +282,9 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
               className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-heading font-extrabold mb-8 leading-[1.1] tracking-tight text-foreground max-w-5xl mx-auto text-balance"
             >
-              Hire world-class{" "}
+              Hire a{" "}
               <span className="relative inline-block">
-                <span className="bg-gradient-to-r from-primary via-primary/90 to-primary/80 bg-clip-text text-transparent">
-                  marketing talent
-                </span>
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-                  className="absolute -bottom-1 left-0 right-0 h-2 bg-primary/15 rounded-full -z-10"
-                />
+                <RotatingText words={talentTypes} />
               </span>
             </motion.h1>
             
@@ -322,7 +354,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 viewport={{ once: true, margin: "-100px" }}
-                className="relative rounded-2xl overflow-hidden border border-border/50 shadow-2xl bg-background backdrop-blur-sm"
+                className="relative rounded-2xl overflow-hidden border-2 border-border/60 shadow-2xl bg-background backdrop-blur-sm"
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-primary/3 pointer-events-none" />
                 <DashboardPreview />
@@ -472,7 +504,7 @@ export default function HomePage() {
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
             {benefits.map((benefit, index) => {
               const Icon = benefit.icon
               return (
@@ -480,10 +512,10 @@ export default function HomePage() {
                   <motion.div
                     whileHover={{ y: -4 }}
                     transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="relative"
+                    className="relative h-full flex"
                   >
-                    <Card className="p-8 border border-border/40 hover:border-primary/40 hover:shadow-xl transition-all duration-300 text-center bg-card h-full relative overflow-hidden group flex flex-col">
-                      <div className="relative z-10 flex flex-col flex-grow">
+                    <Card className="p-8 border border-border/40 hover:border-primary/40 hover:shadow-xl transition-all duration-300 text-center bg-card relative overflow-hidden group flex flex-col w-full h-full">
+                      <div className="relative z-10 flex flex-col h-full">
                         {/* Icon with better styling */}
                         <motion.div
                           whileHover={{ scale: 1.05 }}
@@ -501,7 +533,8 @@ export default function HomePage() {
                         <h3 className="text-lg font-heading font-semibold mb-3 text-foreground group-hover:text-primary transition-colors flex-shrink-0">
                           {benefit.title}
                         </h3>
-                        <p className="text-muted-foreground leading-relaxed text-sm flex-grow">
+                        
+                        <p className="text-muted-foreground leading-relaxed text-sm flex-grow mt-auto">
                           {benefit.description}
                         </p>
                       </div>
