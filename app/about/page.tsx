@@ -76,9 +76,9 @@ export default function AboutPage() {
               <p className="text-sm text-muted-foreground leading-relaxed">Move fast. Hire faster. No red tape.</p>
             </Card>
 
-            <Card className="p-6 text-center hover:border-secondary/50 transition-colors">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-secondary/10 rounded-full mb-4">
-                <Target className="h-8 w-8 text-secondary" />
+            <Card className="p-6 text-center hover:border-primary/50 transition-colors">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                <Target className="h-8 w-8 text-primary" />
               </div>
               <h3 className="text-lg font-semibold mb-2">Skill over CV</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">

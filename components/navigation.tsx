@@ -11,27 +11,20 @@ export function Navigation() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border/30 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <Link href="/" className="flex items-center gap-2 group">
+        <div className="relative flex items-center justify-between h-20">
+          <Link href="/" className="flex items-center gap-2 group z-10">
             <div className="text-2xl font-heading font-bold tracking-tight">
               <span className="text-foreground group-hover:text-primary transition-colors">Genie</span>
             </div>
           </Link>
 
-          {/* Desktop Navigation - Professional spacing */}
-          <div className="hidden md:flex items-center gap-10">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden md:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
             <Link
               href="/services"
               className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors relative group"
             >
-              Solutions
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
-            </Link>
-            <Link 
-              href="/resources" 
-              className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors relative group"
-            >
-              Resources
+              Services
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300" />
             </Link>
             <Link 
@@ -50,7 +43,7 @@ export function Navigation() {
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 z-10">
             <Button variant="ghost" asChild className="text-sm font-semibold text-muted-foreground hover:text-foreground">
               <Link href="#contact">Log in</Link>
             </Button>
@@ -72,13 +65,7 @@ export function Navigation() {
               href="/services"
               className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              Solutions
-            </Link>
-            <Link
-              href="/resources"
-              className="block text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Resources
+              Services
             </Link>
             <Link
               href="/about"
